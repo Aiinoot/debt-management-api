@@ -6,9 +6,14 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+      table.integer('client_id').unsigned().references('id').inTable('clients').onDelete('CASCADE')
+      table.decimal('title').notNullable()
+      table.integer('installments').notNullable()
+      table.decimal('value').notNullable()
+      table.date('due_date').notNullable()
+      table.enum('status', ['ABERTO', 'QUITADO', 'DEVOLVIDO']).defaultTo('ABERTO')
+      table.timestamp('created_at', { useTz: true }).notNullable().defaultTo(this.now())
+      table.timestamp('updated_at', { useTz: true }).notNullable().defaultTo(this.now())
     })
   }
 
