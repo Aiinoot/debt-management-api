@@ -7,9 +7,9 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.integer('client_id').unsigned().references('id').inTable('clients').onDelete('CASCADE')
-      table.decimal('title').notNullable()
+      table.string('title').notNullable()
       table.integer('installments').notNullable()
-      table.decimal('value').notNullable()
+      table.decimal('value', 10, 2).notNullable()
       table.date('due_date').notNullable()
       table.enum('status', ['ABERTO', 'QUITADO', 'DEVOLVIDO']).defaultTo('ABERTO')
       table.timestamp('created_at', { useTz: true }).notNullable().defaultTo(this.now())
