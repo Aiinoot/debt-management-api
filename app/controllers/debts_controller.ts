@@ -4,15 +4,22 @@ import { createDebtValidator } from '#validators/debt'
 import { HttpContext } from '@adonisjs/core/http'
 
 export default class DebtsController {
-  async index() {
-    const debts = await db.rawQuery(`
+  
+  public async index({ request }: HttpContext) {
+    const clientId = request.input('clientId')
+
+    const debts = await db.rawQuery(
+      `
       SELECT
         debts.*,
         clients.full_name
       FROM debts
       JOIN clients ON clients.id = debts.client_id
-      ORDER BY debts.id DESC
-    `)
+      WHERE debts.client_id = ?
+      ORDER BY debts.due_date ASC
+      `,
+      [clientId]
+    )
 
     return debts.rows
   }
